@@ -1,4 +1,2 @@
-
-
-name := "admin1"
+name := "admin"
 
