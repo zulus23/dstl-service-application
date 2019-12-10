@@ -6,6 +6,7 @@
 # An example controller showing a sample home page
 GET        /                   controllers.HomeController.index
 GET         /signIn                          controllers.SignInController.view
+
 # An example controller showing how to use dependency injection
 
 ->         /admin               admin.Routes

@@ -1,2 +1,0 @@
-GET        /index               controllers.admin.Application.index()
-GET        /assets/*file        controllers.Assets.versioned(path="/public/lib/myadmin", file)
