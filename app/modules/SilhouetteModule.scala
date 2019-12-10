@@ -1,13 +1,9 @@
 package modules
 
 
-import authentication.CustomSecuredErrorHandler
-import authentication.daos.UserDAO
-import authentication.daos.mssql.{PasswordInfoDaoMssql, UserDAOMssql}
-import authentication.services.{UserService, UserServiceImpl}
-import authentication.utils.{DummyPasswordHasher, JWTEnv, SessionEnv}
+
 import com.google.inject.{AbstractModule, Provides}
-import com.mohiva.play.silhouette.api.actions.SecuredErrorHandler
+import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
 import com.mohiva.play.silhouette.api.crypto.{Crypter, CrypterAuthenticatorEncoder}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorService
@@ -17,7 +13,7 @@ import com.mohiva.play.silhouette.crypto.{JcaCrypter, JcaCrypterSettings}
 import com.mohiva.play.silhouette.impl.authenticators._
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import com.mohiva.play.silhouette.impl.util.{DefaultFingerprintGenerator, SecureRandomIDGenerator}
-import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
+import com.mohiva.play.silhouette.persistence.daos.{DelegableAuthInfoDAO, InMemoryAuthInfoDAO}
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import javax.inject.Named
 import net.ceedubs.ficus.Ficus._
@@ -29,14 +25,23 @@ import play.api.libs.concurrent.AkkaGuiceSupport
 import play.api.mvc.SessionCookieBaker
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import authentication.{CustomSecuredErrorHandler, CustomUnsecuredErrorHandler}
+import authentication.daos.UserDAO
+import authentication.daos.mssql.{PasswordInfoDaoMssql, UserDAOMssql}
+import authentication.services.{UserService, UserServiceImpl}
+import authentication.utils.{DummyPasswordHasher, JWTEnv, SessionEnv}
+
+
 
 class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSupport {
   override def configure(): Unit = {
     bind[Silhouette[SessionEnv]].to[SilhouetteProvider[SessionEnv]]
     bind[Silhouette[JWTEnv]].to[SilhouetteProvider[JWTEnv]]
+    bind[UnsecuredErrorHandler].to[CustomUnsecuredErrorHandler]
     bind[SecuredErrorHandler].to[CustomSecuredErrorHandler]
     bind[UserDAO].to[UserDAOMssql]
-    bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDaoMssql]
+    //bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDaoMssql]
+    bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new InMemoryAuthInfoDAO[PasswordInfo])
     bind[UserService].to[UserServiceImpl]
 
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
@@ -115,11 +120,18 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
     val encoder = new CrypterAuthenticatorEncoder(crypter)
     new JWTAuthenticatorService(config, None, encoder, idGenerator, clock)
   }
+  /*@Provides
+  def provideAuthInfoRepository(passwordInfoDAO: DelegableAuthInfoDAO[PasswordInfo]): AuthInfoRepository = {
+
+    new DelegableAuthInfoRepository(passwordInfoDAO)
+  }*/
   @Provides
   def provideAuthInfoRepository(passwordInfoDAO: DelegableAuthInfoDAO[PasswordInfo]): AuthInfoRepository = {
 
     new DelegableAuthInfoRepository(passwordInfoDAO)
   }
+
+
 
   @Provides
   def provideCredentialsProvider(

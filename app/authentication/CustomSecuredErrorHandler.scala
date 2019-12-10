@@ -9,8 +9,9 @@ import play.api.mvc.{RequestHeader, Result}
 import scala.concurrent.Future
 
 class CustomSecuredErrorHandler @Inject() (val messagesApi: MessagesApi) extends SecuredErrorHandler with I18nSupport {
-  override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = ???
-   //Future.successful(Redirect(controllers.routes.SignInController.view()))
+  override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] =
+   Future.successful(Redirect(controllers.routes.SignInController.view()))
 
-  override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = ???
+  override def onNotAuthorized(implicit request: RequestHeader): Future[Result] =
+    Future.successful(Redirect(controllers.routes.SignInController.view()))
 }
