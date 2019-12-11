@@ -4,9 +4,9 @@ import authentication.model.User
 import com.mohiva.play.silhouette.api.LoginInfo
 import javax.inject.Inject
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class UserServiceImpl @Inject()(userDao: UserDAO) extends UserService {
+class UserServiceImpl @Inject()(userDao: UserDAO)(implicit ex: ExecutionContext)  extends UserService {
   override def save(user: User): Future[User] = ???
 
 

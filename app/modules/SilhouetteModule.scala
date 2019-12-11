@@ -40,8 +40,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
     bind[UnsecuredErrorHandler].to[CustomUnsecuredErrorHandler]
     bind[SecuredErrorHandler].to[CustomSecuredErrorHandler]
     bind[UserDAO].to[UserDAOMssql]
-    //bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDaoMssql]
-    bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new InMemoryAuthInfoDAO[PasswordInfo])
+    bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new PasswordInfoDaoMssql)
+  // bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new InMemoryAuthInfoDAO[PasswordInfo])
     bind[UserService].to[UserServiceImpl]
 
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())

@@ -9,7 +9,6 @@ import com.mohiva.play.silhouette.api.{LoginEvent, Silhouette}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorResult
 import com.mohiva.play.silhouette.api.util.{Clock, Credentials, PasswordInfo}
-import com.mohiva.play.silhouette.impl.User
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import javax.inject.Inject
@@ -34,17 +33,16 @@ class SignInController @Inject() (components: ControllerComponents,
 
   def submit  = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
     SignInForm.form.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.signIn("",form))),
+      form => Future.successful(BadRequest(views.html.signIn("Error",form))),
       data => {
-        val credentials = Credentials(data.email, data.password)
+        val credentials = Credentials(data.userName, data.password)
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
           userService.retrieve(loginInfo).flatMap {
-            case Some(user) =>
-              Future.successful(Ok(""))
+
             case Some(user) =>
               authInfoRepository.find[PasswordInfo](user.loginInfo).flatMap {
-                case Some(totpInfo) => Future.successful(Ok(""))
-                case _ => authenticateUser(null)
+               // case Some(totpInfo) => Future.successful(Ok(""))
+                case _ => authenticateUser(user)
               }
             case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
           }
@@ -53,7 +51,7 @@ class SignInController @Inject() (components: ControllerComponents,
     )
   }
 
-  protected def authenticateUser(user: User)(implicit request: Request[_]): Future[AuthenticatorResult] = {
+  protected def authenticateUser(user: authentication.model.User)(implicit request: Request[_]): Future[AuthenticatorResult] = {
     val c = configuration.underlying
     val result = Redirect(routes.HomeController.index())
     silhouette.env.authenticatorService.create(user.loginInfo).map {

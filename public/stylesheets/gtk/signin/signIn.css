@@ -1,0 +1,7 @@
+@import '../../main.css';
+.gtk-login-container {
+    height: 100vh;
+    /*background-image: url("../images/bg_texture.png");*/
+    background-color: #EDEDED
+
+}

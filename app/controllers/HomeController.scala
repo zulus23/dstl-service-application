@@ -13,8 +13,8 @@ import scala.concurrent.Future
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(silhouette: Silhouette[JWTEnv], cc: ControllerComponents) extends AbstractController(cc) {
-  val SecuredAction: SecuredActionBuilder[JWTEnv, AnyContent] =
+class HomeController @Inject()(silhouette: Silhouette[SessionEnv], cc: ControllerComponents) extends AbstractController(cc) {
+  val SecuredAction: SecuredActionBuilder[SessionEnv, AnyContent] =
     silhouette.SecuredAction
   /**
    * Create an Action to render an HTML page with a welcome message.

@@ -8,9 +8,10 @@ import javax.inject.Inject
 import scala.concurrent.Future
 import scala.reflect.ClassTag
 
-class PasswordInfoDaoMssql  extends DelegableAuthInfoDAO[PasswordInfo]{
+class PasswordInfoDaoMssql @Inject()(implicit
+                                     val classTag: ClassTag[PasswordInfo]) extends DelegableAuthInfoDAO[PasswordInfo]{
 
-    override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = ???
+    override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] =  Future.successful(Some(new PasswordInfo("dummy-hasher","3",null)))
 
   override def add(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = ???
 
@@ -20,5 +21,5 @@ class PasswordInfoDaoMssql  extends DelegableAuthInfoDAO[PasswordInfo]{
 
   override def remove(loginInfo: LoginInfo): Future[Unit] = ???
 
-  override val classTag: ClassTag[PasswordInfo] = null
+
 }

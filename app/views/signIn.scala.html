@@ -1,18 +1,23 @@
 @import play.api.data.Form
 @import authentication.forms.SignInForm.Data
-
-@(message:String,signInForm: Form[Data])(implicit request: RequestHeader)
+@import helper._
+@(message:String,signInForm: Form[Data])(implicit request: RequestHeader,messages: Messages)
 
 
 @main(message) {
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/gtk/signin/signin.css")">
+    <div class="gtk-login-container">
     <fieldset class="col-md-6 col-md-offset-3">
         <legend></legend>
-        @helper.form(action = controllers.routes.SignInController.submit()) {
+        @helper.form(action = routes.SignInController.submit()) {
             @helper.CSRF.formField
-
+            <label for="user">Пользователь</label>
+            @helper.inputText(signInForm("userName"),Symbol("id") -> "userName",Symbol("_label") -> null)
+            <label for="password">Пароль</label>
+            @helper.inputPassword(signInForm("password"),Symbol("id") -> "password",Symbol("_label") -> null)
             <div class="form-group">
                 <div>
-                    <button id="submit" type="submit" value="submit" class="btn btn-lg btn-primary btn-block"></button>
+                    <button id="submit" type="submit" value="submit" class="btn btn-lg btn-primary btn-block">ОК</button>
                 </div>
             </div>
         }
@@ -20,4 +25,5 @@
 
 
     </fieldset>
+    </div>
 }
