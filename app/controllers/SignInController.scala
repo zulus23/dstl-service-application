@@ -5,7 +5,7 @@ import authentication.forms.SignInForm
 import authentication.services.UserService
 import authentication.utils.SessionEnv
 import com.mohiva.play.silhouette
-import com.mohiva.play.silhouette.api.{LoginEvent, Silhouette}
+import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, Silhouette}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorResult
 import com.mohiva.play.silhouette.api.util.{Clock, Credentials, PasswordInfo}
@@ -40,7 +40,7 @@ class SignInController @Inject() (components: ControllerComponents,
           userService.retrieve(loginInfo).flatMap {
 
             case Some(user) =>
-              authInfoRepository.find[PasswordInfo](user.loginInfo).flatMap {
+              authInfoRepository.find[PasswordInfo](new LoginInfo(user.userName,user.userName)).flatMap {
                // case Some(totpInfo) => Future.successful(Ok(""))
                 case _ => authenticateUser(user)
               }
@@ -54,7 +54,7 @@ class SignInController @Inject() (components: ControllerComponents,
   protected def authenticateUser(user: authentication.model.User)(implicit request: Request[_]): Future[AuthenticatorResult] = {
     val c = configuration.underlying
     val result = Redirect(routes.HomeController.index())
-    silhouette.env.authenticatorService.create(user.loginInfo).map {
+    silhouette.env.authenticatorService.create(new LoginInfo(user.userName,user.userName)).map {
 
       case authenticator => authenticator
     }.flatMap { authenticator =>

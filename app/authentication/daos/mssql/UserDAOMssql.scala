@@ -14,7 +14,7 @@ class UserDAOMssql  extends UserDAO{
    * @param loginInfo The login info of the user to find.
    * @return The found user or None if no user for the given login info could be found.
    */
-  override def find(loginInfo: LoginInfo): Future[Option[User]] = Future.successful(Option(User(UUID.randomUUID(),loginInfo,Some("Ivan"),Some("Ivan"),Some(""),Some(""),None)))
+  override def find(loginInfo: LoginInfo): Future[Option[User]] = Future.successful(Option(User(loginInfo.providerID.toInt,"Ivan",1,"Ivan")))
 
   /** Finds a user by its user ID.
    *

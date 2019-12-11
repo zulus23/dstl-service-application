@@ -46,6 +46,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala,LauncherJarPlugin
 
 libraryDependencies ++= Seq(jdbc, ehcache, ws, specs2 % Test, guice,
   "com.microsoft.sqlserver" % "mssql-jdbc" % "7.4.1.jre11",
+  "com.typesafe.play" %% "play-slick" % "4.0.2",
   "net.codingwell" %% "scala-guice" % "4.2.6",
   "com.iheart" %% "ficus" % "1.4.7"
 )
