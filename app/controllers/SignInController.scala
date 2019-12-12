@@ -5,6 +5,7 @@ import authentication.forms.SignInForm
 import authentication.services.UserService
 import authentication.utils.SessionEnv
 import com.mohiva.play.silhouette
+import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, Silhouette}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorResult
@@ -13,7 +14,7 @@ import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import javax.inject.Inject
 import play.api.Configuration
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -46,6 +47,9 @@ class SignInController @Inject() (components: ControllerComponents,
               }
             case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
           }
+        }.recover{
+          case _: ProviderException =>
+            Redirect(routes.SignInController.view()).flashing("error" -> Messages("invalid.credentials"))
         }
       }
     )
