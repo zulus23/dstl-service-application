@@ -5,6 +5,7 @@ import authentication.forms.SignInForm
 import authentication.services.UserService
 import authentication.utils.SessionEnv
 import com.mohiva.play.silhouette
+import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, Silhouette}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorResult
@@ -46,6 +47,9 @@ class SignInController @Inject() (components: ControllerComponents,
               }
             case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
           }
+        }.recover {
+          case _: ProviderException =>
+            Redirect(routes.SignInController.view()).flashing("error" -> "Пользоатель нет"/*Messages("invalid.credentials")*/)
         }
       }
     )

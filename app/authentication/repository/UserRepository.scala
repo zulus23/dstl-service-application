@@ -45,7 +45,8 @@ class UserRepository  @Inject() (
   private val users = TableQuery[UserTable]
 
   def findByName(userName:String): Future[Option[User]] = db.run {
-    users.filter(_.name.toLowerCase === userName.toLowerCase ).result.map(_.headOption)
+    val result = users.filter(_.name.toLowerCase === userName.toLowerCase ).result.map(_.headOption)
+    result
   }
 
 
