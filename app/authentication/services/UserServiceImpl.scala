@@ -11,5 +11,5 @@ class UserServiceImpl @Inject()(userRepository: UserRepository)(implicit ex: Exe
   override def save(user: User): Future[User] = ???
 
 
-  override def retrieve(loginInfo: LoginInfo): Future[Option[User]] = userRepository.findByName(loginInfo.providerID)
+  override def retrieve(loginInfo: LoginInfo): Future[Option[User]] = userRepository.findByName(loginInfo.providerKey)
 }

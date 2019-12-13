@@ -1,6 +1,6 @@
 package authentication.repository
 
-import authentication.model.User
+import authentication.model.{User, UserPassword}
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.db.NamedDatabase
@@ -40,14 +40,44 @@ class UserRepository  @Inject() (
      * In this case, we are simply passing the id, name and page parameters to the Person case classes
      * apply and unapply methods.
      */
-    def * = (id, name, idService,description) <> ((User.apply _).tupled, User.unapply)
+    def * = (id, name, idService,description.?) <> ((User.apply _).tupled, User.unapply)
   }
+  private class UserPasswordTable(tag: Tag) extends Table[UserPassword](tag, "gtk_dstl_user") {
+
+    /** The ID column, which is the primary key, and auto incremented */
+    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
+    def name = column[String]("name")
+    /** The name column */
+    def password = column[String]("password")
+
+    /** The age column */
+
+
+    /**
+     * This is the tables default "projection".
+     *
+     * It defines how the columns are converted to and from the Person object.
+     *
+     * In this case, we are simply passing the id, name and page parameters to the Person case classes
+     * apply and unapply methods.
+     */
+    def * = (id, name,password) <> ((UserPassword.apply _).tupled, UserPassword.unapply)
+  }
+
   private val users = TableQuery[UserTable]
+  private val userPasswords = TableQuery[UserPasswordTable]
+
+
+
+
 
   def findByName(userName:String): Future[Option[User]] = db.run {
     val result = users.filter(_.name.toLowerCase === userName.toLowerCase ).result.map(_.headOption)
     result
   }
-
+  def findPasswordByUserName(userName:String): Future[Option[UserPassword]] = db.run {
+    val result = userPasswords.filter(_.name.toLowerCase === userName.toLowerCase ).result.map(_.headOption)
+    result
+  }
 
 }

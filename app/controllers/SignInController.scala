@@ -14,7 +14,7 @@ import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import javax.inject.Inject
 import play.api.Configuration
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,7 +49,7 @@ class SignInController @Inject() (components: ControllerComponents,
           }
         }.recover {
           case _: ProviderException =>
-            Redirect(routes.SignInController.view()).flashing("error" -> "Пользоатель нет"/*Messages("invalid.credentials")*/)
+            Redirect(routes.SignInController.view()).flashing("error" -> Messages("invalid.credentials"))
         }
       }
     )

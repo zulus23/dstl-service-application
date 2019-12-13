@@ -28,6 +28,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import authentication.{CustomSecuredErrorHandler, CustomUnsecuredErrorHandler}
 import authentication.daos.UserDAO
 import authentication.daos.mssql.{PasswordInfoDaoMssql, UserDAOMssql}
+import authentication.repository.UserRepository
 import authentication.services.{UserService, UserServiceImpl}
 import authentication.utils.{DummyPasswordHasher, JWTEnv, SessionEnv}
 
@@ -40,7 +41,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
     bind[UnsecuredErrorHandler].to[CustomUnsecuredErrorHandler]
     bind[SecuredErrorHandler].to[CustomSecuredErrorHandler]
     //bind[UserDAO].to[UserDAOMssql]
-    bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new PasswordInfoDaoMssql)
+    //bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new PasswordInfoDaoMssql)
   // bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new InMemoryAuthInfoDAO[PasswordInfo])
     bind[UserService].to[UserServiceImpl]
 
@@ -131,6 +132,10 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
     new DelegableAuthInfoRepository(passwordInfoDAO)
   }
 
+  @Provides
+  def providePasswordInfoRepository(userRepository: UserRepository):DelegableAuthInfoDAO[PasswordInfo] = {
+     new PasswordInfoDaoMssql(userRepository)
+  }
 
 
   @Provides
