@@ -4,7 +4,7 @@ import authentication.model.{Enterprise, User, UserEnterprise, UserPassword}
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.db.NamedDatabase
-import slick.jdbc.JdbcProfile
+import slick.jdbc.{GetResult, JdbcProfile}
 import slick.jdbc.SQLServerProfile.api._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,6 +32,7 @@ class UserRepository  @Inject() (
     def idService = column[Int]("idService")
     def description = column[String]("description")
 
+    var enterpriseList: Option[Seq[EnterpriseTable]] = None
     /**
      * This is the tables default "projection".
      *
@@ -113,18 +114,30 @@ class UserRepository  @Inject() (
   private val enterprises = TableQuery[EnterpriseTable]
   private val userEnterprises = TableQuery[UserEnterpriseTable]
 
-
+  implicit val getUserResult = GetResult(r => User(r.nextInt, r.nextString, r.nextInt,
+                                                   Some(r.nextString)))
 
 
   def findByName(userName:String): Future[Option[User]] = db.run{
-    val k =  for {
-        user <- users.filter(_.name.toLowerCase === userName.toLowerCase)
-        refEnterprise <- userEnterprises if user.id === refEnterprise.idUser
-        e <- enterprises if e.id === refEnterprise.idEnterprise
-      } yield(user,e).result
+    val userAction =  sql"select id, name, idService,description from gtk_dstl_user".as[User]
+    val result =for {
+      user <- userAction
+      ue <- userEnterprises if ue.idUser === user
+    } yield()
 
 
-
+   /* val results  = for{
+      user <- users.filter(_.name.toLowerCase === userName.toLowerCase)
+      ue <- userEnterprises if ue.idUser === user.id
+      enterprise <- enterprises if enterprise.id === ue.idEnterprise
+    } yield(user,enterprise)
+    results.groupBy(_._1)map {
+      case(user,tuples) => {
+        user.enterpriseList = Some(tuples.map(_._2).resul)
+        user
+      }
+    }*/
+     results.result
 
       //= users.filter(_.name.toLowerCase === userName.toLowerCase ).result.map(_.headOption)
 
