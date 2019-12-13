@@ -2,7 +2,7 @@ package controllers
 
 import authentication.utils.{JWTEnv, SessionEnv}
 import com.mohiva.play.silhouette.api.Silhouette
-import com.mohiva.play.silhouette.api.actions.SecuredActionBuilder
+import com.mohiva.play.silhouette.api.actions.{SecuredActionBuilder, SecuredRequest}
 import javax.inject._
 import play.api.mvc._
 
@@ -22,8 +22,8 @@ class HomeController @Inject()(silhouette: Silhouette[SessionEnv], cc: Controlle
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index = SecuredAction.async{ implicit request =>
-    Future.successful(Ok(views.html.index("Your new application is ready.")))
+  def index = SecuredAction.async{ implicit request: SecuredRequest[SessionEnv,AnyContent] =>
+    Future.successful(Ok(views.html.index("Your new application is ready.",request.identity)))
   }
 
 }

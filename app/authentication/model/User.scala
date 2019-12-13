@@ -3,10 +3,12 @@ package authentication.model
 import com.mohiva.play.silhouette.api.Identity
 import play.api.libs.json.Json
 
-case class User(userId: Int, userName: String, idService: Int, description: Option[String]) extends Identity
+case class User(userId: Int, userName: String, idService: Int, description: Option[String]/*,enterprise: Option[Seq[Enterprise]]=None*/) extends Identity
 
 object User {
+
   implicit val userToJson = Json.writes[User]
 }
 case class UserPassword(userId: Int,userName: String,password:String)
 
+case class UserEnterprise(idUser: Int, idEnterprise: Int)
