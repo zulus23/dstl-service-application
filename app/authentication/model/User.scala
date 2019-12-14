@@ -3,7 +3,7 @@ package authentication.model
 import com.mohiva.play.silhouette.api.Identity
 import play.api.libs.json.Json
 
-case class User(userId: Int, userName: String, idService: Int, description: Option[String]) extends Identity {
+case class User(userId: Int, userName: String, idService: Int, description: Option[String] ) extends Identity {
   var enterpriseList: Option[Seq[Enterprise]] = None
 }
 

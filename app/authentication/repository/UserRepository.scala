@@ -118,12 +118,14 @@ class UserRepository  @Inject() (
                                                    Some(r.nextString)))
 
 
-  def findByName(userName:String): Future[Option[User]] = db.run{
+  def findByName(userName:String): Future[Seq[(User,Enterprise)]] = db.run{
     val userAction =  sql"select id, name, idService,description from gtk_dstl_user".as[User]
-    val result =for {
-      user <- userAction
-      ue <- userEnterprises if ue.idUser === user
-    } yield()
+    val results = (for {
+      user <- users.filter(_.name.toLowerCase === userName.toLowerCase)
+      ue <- userEnterprises if ue.idUser === user.id
+      enterprise <- enterprises if enterprise.id === ue.idEnterprise
+    } yield(user,enterprise)).result
+
 
 
    /* val results  = for{
@@ -137,7 +139,7 @@ class UserRepository  @Inject() (
         user
       }
     }*/
-     results.result
+     results
 
       //= users.filter(_.name.toLowerCase === userName.toLowerCase ).result.map(_.headOption)
 
