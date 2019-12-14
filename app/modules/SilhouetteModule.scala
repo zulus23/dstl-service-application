@@ -7,7 +7,7 @@ import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErr
 import com.mohiva.play.silhouette.api.crypto.{Crypter, CrypterAuthenticatorEncoder}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorService
-import com.mohiva.play.silhouette.api.util.{Clock, FingerprintGenerator, IDGenerator, PasswordHasherRegistry, PasswordInfo}
+import com.mohiva.play.silhouette.api.util.{Clock, FingerprintGenerator, HTTPLayer, IDGenerator, PasswordHasherRegistry, PasswordInfo, PlayHTTPLayer}
 import com.mohiva.play.silhouette.api.{Environment, EventBus, Silhouette, SilhouetteProvider}
 import com.mohiva.play.silhouette.crypto.{JcaCrypter, JcaCrypterSettings}
 import com.mohiva.play.silhouette.impl.authenticators._
@@ -19,6 +19,8 @@ import javax.inject.Named
 import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import net.ceedubs.ficus.readers.EnumerationReader._
+
+// import net.ceedubs.ficus.readers.EnumerationReader._ это импорт нужен но его удаляет оптимизатор
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
 import play.api.libs.concurrent.AkkaGuiceSupport
@@ -31,6 +33,7 @@ import authentication.daos.mssql.{PasswordInfoDaoMssql, UserDAOMssql}
 import authentication.repository.UserRepository
 import authentication.services.{UserService, UserServiceImpl}
 import authentication.utils.{DummyPasswordHasher, JWTEnv, SessionEnv}
+import play.api.libs.ws.WSClient
 
 
 
@@ -55,6 +58,9 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
     bind[EventBus].toInstance(EventBus())
     bind[Clock].toInstance(Clock())
   }
+
+  @Provides
+  def provideHTTPLayer(client: WSClient): HTTPLayer = new PlayHTTPLayer(client)
 
   @Provides
   def provideJWTEnvironment(
