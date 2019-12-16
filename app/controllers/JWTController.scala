@@ -16,11 +16,11 @@ class JWTController @Inject()(cc: ControllerComponents,silhouette: Silhouette[Se
 
     def getToken:Action[AnyContent]= silhouette.UserAwareAction{ implicit request =>
       println("-----------------------------------------")
-      val user = request.identity match {
-        case Some(identity) => identity
-        case None => null
+      request.identity match {
+        case Some(identity) => Ok(Json.toJson(identity))
+        case None => Ok("")
       }
-      Ok(Json.toJson(user))
+
 
     }
 }

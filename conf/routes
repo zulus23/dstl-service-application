@@ -8,7 +8,10 @@ GET         /                    controllers.HomeController.index
 GET         /signIn              controllers.SignInController.view
 POST        /signIn              controllers.SignInController.submit
 +nocsrf
+GET        /token              controllers.JWTController.getToken
++nocsrf
 POST        /token              controllers.JWTController.getToken
+GET         /signOut            controllers.HomeController.signOut
 
 
 # An example controller showing how to use dependency injection

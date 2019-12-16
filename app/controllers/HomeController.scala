@@ -1,7 +1,7 @@
 package controllers
 
 import authentication.utils.{JWTEnv, SessionEnv}
-import com.mohiva.play.silhouette.api.Silhouette
+import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
 import com.mohiva.play.silhouette.api.actions.{SecuredActionBuilder, SecuredRequest}
 import javax.inject._
 import play.api.mvc._
@@ -25,5 +25,9 @@ class HomeController @Inject()(silhouette: Silhouette[SessionEnv], cc: Controlle
   def index = SecuredAction.async{ implicit request: SecuredRequest[SessionEnv,AnyContent] =>
     Future.successful(Ok(views.html.index("Your new application is ready.",request.identity)))
   }
-
+  def signOut = silhouette.SecuredAction.async { implicit request: SecuredRequest[SessionEnv, AnyContent] =>
+    val result = Redirect(routes.HomeController.index())
+    silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
+    silhouette.env.authenticatorService.discard(request.authenticator, result)
+  }
 }

@@ -19,6 +19,10 @@
     <body>
         @* And here's where we render the `Html` object containing
          * the page content. *@
+        @user.map { u =>
+            <a href="@controllers.routes.HomeController.signOut"><button>Выход</button></a>
+
+        }
         @content
     </body>
 </html>
