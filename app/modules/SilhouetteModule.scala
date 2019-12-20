@@ -27,22 +27,22 @@ import play.api.libs.concurrent.AkkaGuiceSupport
 import play.api.mvc.SessionCookieBaker
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import authentication.{CustomSecuredErrorHandler, CustomUnsecuredErrorHandler}
+
 import authentication.daos.UserDAO
 import authentication.daos.mssql.{PasswordInfoDaoMssql, UserDAOMssql}
 import authentication.repository.UserRepository
 import authentication.services.{UserService, UserServiceImpl}
-import authentication.utils.{DummyPasswordHasher, JWTEnv, SessionEnv}
+import authentication.utils.{DummyPasswordHasher, JWTEnv}
 import play.api.libs.ws.WSClient
 
 
 
 class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSupport {
   override def configure(): Unit = {
-    bind[Silhouette[SessionEnv]].to[SilhouetteProvider[SessionEnv]]
+
     bind[Silhouette[JWTEnv]].to[SilhouetteProvider[JWTEnv]]
-    bind[UnsecuredErrorHandler].to[CustomUnsecuredErrorHandler]
-    bind[SecuredErrorHandler].to[CustomSecuredErrorHandler]
+   /* bind[UnsecuredErrorHandler].to[CustomUnsecuredErrorHandler]
+    bind[SecuredErrorHandler].to[CustomSecuredErrorHandler]*/
     //bind[UserDAO].to[UserDAOMssql]
     //bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new PasswordInfoDaoMssql)
   // bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new InMemoryAuthInfoDAO[PasswordInfo])
@@ -75,19 +75,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
       eventBus
     )
   }
-  @Provides
-  def provideSessionEnvironment(
-                             userService: UserService,
-                             authenticatorService: AuthenticatorService[SessionAuthenticator],
-                             eventBus: EventBus): Environment[SessionEnv] = {
 
-    Environment[SessionEnv](
-      userService,
-      authenticatorService,
-      Seq(),
-      eventBus
-    )
-  }
 
 
   /** Crypter for the authenticator.
@@ -99,7 +87,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
     new JcaCrypter(config)
   }
 
-  @Provides
+  /*@Provides
   def provideSessionAuthenticatorService(
                                       @Named("authenticator-crypter") crypter: Crypter,
                                       fingerprintGenerator: FingerprintGenerator,
@@ -114,7 +102,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
 
     new SessionAuthenticatorService(config, fingerprintGenerator, encoder, sessionCookieBaker, clock)
   }
-
+*/
 
   @Provides
   def provideJwtAuthenticatorService(

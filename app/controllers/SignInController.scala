@@ -2,33 +2,62 @@ package controllers
 
 import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import authentication.forms.SignInForm
+import authentication.model.UserCredential
 import authentication.services.UserService
-import authentication.utils.SessionEnv
+import authentication.utils.{JWTEnv}
 import com.mohiva.play.silhouette
+import com.mohiva.play.silhouette.api.actions.SecuredActionBuilder
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
-import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, Silhouette}
+import com.mohiva.play.silhouette.api.{EventBus, LoginEvent, LoginInfo, Silhouette}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.services.AuthenticatorResult
+import com.mohiva.play.silhouette.api.services.{AuthenticatorResult, AuthenticatorService}
 import com.mohiva.play.silhouette.api.util.{Clock, Credentials, PasswordInfo}
+import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import javax.inject.Inject
 import play.api.Configuration
 import play.api.i18n.{I18nSupport, Messages}
-import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request}
+import play.api.libs.json.{Json, OFormat}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request, Result}
+
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration.FiniteDuration
+
 
 class SignInController @Inject() (components: ControllerComponents,
-                        silhouette: Silhouette[SessionEnv], userService: UserService,
+                        silhouette: Silhouette[JWTEnv], userService: UserService,
                                   authInfoRepository: AuthInfoRepository,
                                   credentialsProvider: CredentialsProvider,configuration: Configuration,
                                   clock: Clock )(implicit
 
                                                  ex: ExecutionContext) extends AbstractController(components) with I18nSupport {
 
-  def view = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
+  implicit val emailCredentialFormat: OFormat[UserCredential] =    Json.format[UserCredential]
+
+  val SecuredAction: SecuredActionBuilder[JWTEnv, AnyContent] =
+    silhouette.SecuredAction
+  val authenticatorRepository: AuthenticatorService[JWTAuthenticator] =
+    silhouette.env.authenticatorService
+  val eventBus: EventBus = silhouette.env.eventBus
+
+
+  def authenticate: Action[UserCredential] =
+    Action.async(parse.json[UserCredential]) { implicit request =>
+      val credentials = Credentials(request.body.userName, request.body.password)
+      for {
+        loginInfo <- credentialsProvider.authenticate(credentials)
+        authenticator <- authenticatorRepository.create(loginInfo)
+        token <- authenticatorRepository.init(authenticator)
+        t <- userService.retrieve(loginInfo)
+      }yield {
+        val result: Result = Ok(
+          Json.toJson(
+            Token(token, expiresOn = authenticator.expirationDateTime)))
+      }
+    }
+
+  /*def view = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
     Future.successful(Ok(views.html.signIn("Login",SignInForm.form)))
   }
 
@@ -49,7 +78,7 @@ class SignInController @Inject() (components: ControllerComponents,
           }
         }.recover {
           case _: ProviderException =>
-            Redirect(routes.SignInController.view()).flashing("error" -> Messages("invalid.credentials"))
+            //Redirect(routes.SignInController.view()).flashing("error" -> Messages("invalid.credentials"))
         }
       }
     )
@@ -68,5 +97,5 @@ class SignInController @Inject() (components: ControllerComponents,
       }
     }
   }
-
+*/
 }

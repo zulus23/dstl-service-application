@@ -22,12 +22,12 @@ class HomeController @Inject()(silhouette: Silhouette[SessionEnv], cc: Controlle
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index = SecuredAction.async{ implicit request: SecuredRequest[SessionEnv,AnyContent] =>
+  /*def index = SecuredAction.async{ implicit request: SecuredRequest[SessionEnv,AnyContent] =>
     Future.successful(Ok(views.html.index("Your new application is ready.",request.identity)))
   }
   def signOut = silhouette.SecuredAction.async { implicit request: SecuredRequest[SessionEnv, AnyContent] =>
     val result = Redirect(routes.HomeController.index())
     silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
     silhouette.env.authenticatorService.discard(request.authenticator, result)
-  }
+  }*/
 }

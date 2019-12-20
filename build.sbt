@@ -27,6 +27,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala,LauncherJarPlugin
   .aggregate(dstlServiceCommon,admin)
   .dependsOn(dstlServiceCommon,admin)
     .settings(
+      watchSources ++= (baseDirectory.value / "public/ui" ** "*").get,
       resolvers ++= Seq(
         Resolver.mavenCentral),
        /* Resolver.sonatypeRepo("releases"),
