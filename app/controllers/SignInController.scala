@@ -33,7 +33,7 @@ class SignInController @Inject() (components: ControllerComponents,
 
                                                  ex: ExecutionContext) extends AbstractController(components) with I18nSupport {
 
-  implicit val emailCredentialFormat: OFormat[UserCredential] =    Json.format[UserCredential]
+  implicit val emailCredentialFormat: OFormat[UserCredential] = Json.format[UserCredential]
 
   val SecuredAction: SecuredActionBuilder[JWTEnv, AnyContent] =
     silhouette.SecuredAction
@@ -45,17 +45,32 @@ class SignInController @Inject() (components: ControllerComponents,
   def authenticate: Action[UserCredential] =
     Action.async(parse.json[UserCredential]) { implicit request =>
       val credentials = Credentials(request.body.userName, request.body.password)
-      for {
-        loginInfo <- credentialsProvider.authenticate(credentials)
-        authenticator <- authenticatorRepository.create(loginInfo)
-        token <- authenticatorRepository.init(authenticator)
-        t <- userService.retrieve(loginInfo)
-      }yield {
-        val result: Result = Ok(
-          Json.toJson(
-            Token(token, expiresOn = authenticator.expirationDateTime)))
+      credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
+        userService.retrieve(loginInfo).flatMap {
+          case Some(user) => silhouette.env.authenticatorService.create(loginInfo).map {
+            case authenticator => authenticator
+          }.flatMap { authenticator =>
+            silhouette.env.eventBus.publish(LoginEvent(user, request))
+            silhouette.env.authenticatorService.init(authenticator).map { token =>
+              Ok(token)
+            }
+          }
+          case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
+        }.recover {
+          case e: ProviderException =>
+            Unauthorized(Json.obj("message" -> Messages("invalid.credentials")))
+        }
       }
     }
+
+
+
+
+/*private def createAuthenticator(authenticator: JWTAuthenticator) = {
+  authenticator.copy(expirationDateTime = rememberMeParams._1,
+  idleTimeout = rememberMeParams._2
+  )
+}*/
 
   /*def view = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
     Future.successful(Ok(views.html.signIn("Login",SignInForm.form)))
@@ -98,4 +113,5 @@ class SignInController @Inject() (components: ControllerComponents,
     }
   }
 */
+
 }

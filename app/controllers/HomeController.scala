@@ -1,9 +1,10 @@
 package controllers
 
-import authentication.utils.{JWTEnv, SessionEnv}
+import authentication.utils.JWTEnv
 import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
 import com.mohiva.play.silhouette.api.actions.{SecuredActionBuilder, SecuredRequest}
 import javax.inject._
+import play.api.libs.json.Json
 import play.api.mvc._
 
 import scala.concurrent.Future
@@ -13,8 +14,8 @@ import scala.concurrent.Future
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(silhouette: Silhouette[SessionEnv], cc: ControllerComponents) extends AbstractController(cc) {
-  val SecuredAction: SecuredActionBuilder[SessionEnv, AnyContent] =
+class HomeController @Inject()(silhouette: Silhouette[JWTEnv], cc: ControllerComponents) extends AbstractController(cc) {
+  val SecuredAction: SecuredActionBuilder[JWTEnv, AnyContent] =
     silhouette.SecuredAction
   /**
    * Create an Action to render an HTML page with a welcome message.
@@ -22,6 +23,11 @@ class HomeController @Inject()(silhouette: Silhouette[SessionEnv], cc: Controlle
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
+
+  def index = SecuredAction.async{ implicit request: SecuredRequest[JWTEnv,AnyContent] =>
+    Future.successful(Ok(Json.toJson("Hello")))
+  }
+
   /*def index = SecuredAction.async{ implicit request: SecuredRequest[SessionEnv,AnyContent] =>
     Future.successful(Ok(views.html.index("Your new application is ready.",request.identity)))
   }

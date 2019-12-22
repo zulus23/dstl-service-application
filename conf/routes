@@ -8,7 +8,8 @@ GET     /dstl                           controllers.FrontendController.index()
 +nocsrf
 #GET        /token              controllers.JWTController.getToken
 +nocsrf
-#POST        /token              controllers.JWTController.getToken
+POST        /dstl/api/login              controllers.SignInController.authenticate
+POST        /dstl/api/work              controllers.HomeController.index
 
 
 # An example controller showing how to use dependency injection

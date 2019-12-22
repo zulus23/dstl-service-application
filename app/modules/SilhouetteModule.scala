@@ -2,6 +2,7 @@ package modules
 
 
 
+import authentication.utils.{CustomSecuredErrorHandler, CustomUnsecuredErrorHandler}
 import com.google.inject.{AbstractModule, Provides}
 import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
 import com.mohiva.play.silhouette.api.crypto.{Crypter, CrypterAuthenticatorEncoder}
@@ -41,8 +42,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
   override def configure(): Unit = {
 
     bind[Silhouette[JWTEnv]].to[SilhouetteProvider[JWTEnv]]
-   /* bind[UnsecuredErrorHandler].to[CustomUnsecuredErrorHandler]
-    bind[SecuredErrorHandler].to[CustomSecuredErrorHandler]*/
+    bind[UnsecuredErrorHandler].to[CustomUnsecuredErrorHandler]
+    bind[SecuredErrorHandler].to[CustomSecuredErrorHandler]
     //bind[UserDAO].to[UserDAOMssql]
     //bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new PasswordInfoDaoMssql)
   // bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new InMemoryAuthInfoDAO[PasswordInfo])
