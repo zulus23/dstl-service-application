@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 
-import 'antd/dist/antd.css';
+import 'devextreme/dist/css/dx.common.css';
+import 'devextreme/dist/css/dx.material.blue.light.css';
+
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';

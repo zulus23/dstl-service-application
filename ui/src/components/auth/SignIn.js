@@ -1,26 +1,40 @@
-import React from "react";
-import {Formik,Field,Form} from "formik";
-import { Input, } from 'antd';
-const SignIn = ()=> {
-   return (
-       <div>
-           <Formik initialValues={{user:"",password:""}}
-                   onSubmit={data => {console.log(data)}}
-           >
-               {({values}) => (
-                 <Form >
-                     <Field name="user" type="input" as={Input} placeholder="Введите имя пользователя"/>
+import React, {Component} from "react";
 
-                     <Field name="password" type="input" as={Input.Password} placeholder="Введите пароль"/>
-                     <pre>
-                         {JSON.stringify(values,null,2)}
-                     </pre>
-                 </Form>
-               )
-               }
-           </Formik>
-       </div>
-   )
+
+import './SignIn.css'
+import {Formik, Field, Form} from "formik";
+import {TextField} from "@material-ui/core";
+
+class SignIn extends Component {
+
+
+    constructor(props, context) {
+        super(props, context);
+
+    }
+
+
+    render() {
+        return (
+            <div>
+                <Formik initialValues={{userName: '', password: ''}}>
+                    {({values, isSubmitting}) => (
+                        <Form>
+                            <Field name='userName' type={'input'} as={TextField} />
+                            <div>
+                                <Field name='password' type={'password'} as={TextField}/>
+                            </div>
+                            <pre>{JSON.stringify(values, null, 2)}</pre>
+                        </Form>
+
+                    )}
+                </Formik>
+
+            </div>
+        )
+    }
+
+
 }
 
 export default SignIn
