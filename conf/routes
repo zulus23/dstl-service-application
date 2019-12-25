@@ -4,12 +4,12 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /dstl                           controllers.FrontendController.index()
+GET     /                           controllers.FrontendController.index()
 +nocsrf
 #GET        /token              controllers.JWTController.getToken
 +nocsrf
-POST        /dstl/api/login              controllers.SignInController.authenticate
-POST        /dstl/api/work              controllers.HomeController.index
+POST        /api/login              controllers.SignInController.authenticate
+POST        /api/work              controllers.HomeController.index
 
 
 # An example controller showing how to use dependency injection

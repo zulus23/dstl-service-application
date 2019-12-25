@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import createSagaMiddleware from 'redux-saga'
 
 
 import 'devextreme/dist/css/dx.common.css';
@@ -9,14 +10,23 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {applyMiddleware, createStore} from "redux";
-import reduxThunk from 'redux-thunk';
 import rootReducer from "./rootReducer";
 import {Provider} from "react-redux";
+import rootSaga from "./modules/rootSaga";
+import {BrowserRouter} from "react-router-dom";
 
-const createStoreWithMiddleware = applyMiddleware(reduxThunk);
+const sagaMiddleware = createSagaMiddleware();
+const createStoreWithMiddleware = applyMiddleware(sagaMiddleware);
+
 const store = createStore(rootReducer,createStoreWithMiddleware);
 
-ReactDOM.render(<Provider store={store}><App /> </Provider>, document.getElementById('root'));
+sagaMiddleware.run(rootSaga);
+
+ReactDOM.render(<Provider store={store}>
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+    </Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
