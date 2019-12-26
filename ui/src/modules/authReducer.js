@@ -20,7 +20,7 @@ export default function authReducer(state = initialState, action) {
     switch (action.type) {
         case AUTHENTICATED : {
             console.log(action);
-            return {...state, authenticated: true,token: action.payload}
+            return {...state, authenticated: true,token: action.payload.token}
         }
         case  AUTHENTICATION_ERROR : {
             return {...state, error: action.payload.error}
@@ -32,12 +32,12 @@ export default function authReducer(state = initialState, action) {
 }
 
 export function login(user) {
-    return {type: 'USER_SIGNIN', payload: user}
+    return {type: USER_SIGNIN, payload: user}
 
 }
 
 export function* authSaga() {
-    yield takeLatest('USER_SIGNIN', authorizathion);
+    yield takeLatest(USER_SIGNIN, authorizathion);
 }
 
 function* authorizathion(user) {
@@ -45,20 +45,20 @@ function* authorizathion(user) {
         const userData = user.payload;
 
         let token = yield call(api.authorization,userData);
-        console.log(token.data)
-        yield put({
-            type: 'AUTHENTICATED',
-            payload: {token:token.data}
-        })
+        yield put(successAuthorized(token.data));
     } catch (e) {
-        console.log(" ----- ");
         yield put({
-            type: 'AUTHENTICATION_ERROR',
+            type: AUTHENTICATION_ERROR,
             payload: {error: e.message}
         })
     }
 
 }
-
+const successAuthorized = (data)=> {
+    return {
+        type: AUTHENTICATED,
+        payload: {token:data}
+    }
+}
 
 

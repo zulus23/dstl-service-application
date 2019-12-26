@@ -9,16 +9,19 @@ import 'devextreme/dist/css/dx.material.blue.light.css';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {applyMiddleware, createStore} from "redux";
+import {applyMiddleware, compose, createStore} from "redux";
 import rootReducer from "./rootReducer";
 import {Provider} from "react-redux";
 import rootSaga from "./modules/rootSaga";
 import {BrowserRouter} from "react-router-dom";
 
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 const sagaMiddleware = createSagaMiddleware();
 const createStoreWithMiddleware = applyMiddleware(sagaMiddleware);
 
-const store = createStore(rootReducer,createStoreWithMiddleware);
+const store = createStore(rootReducer,composeEnhancers(createStoreWithMiddleware));
 
 sagaMiddleware.run(rootSaga);
 

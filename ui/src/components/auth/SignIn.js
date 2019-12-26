@@ -14,7 +14,7 @@ class SignIn extends Component {
             <div >
                 <Formik initialValues={{userName: '', password: ''}} onSubmit={ (data,{setSubmitting}) => {
                  setSubmitting(true);
-                 console.log(data);
+
                     this.props.loginUser(data);
                  setSubmitting(false);
                 }}>
