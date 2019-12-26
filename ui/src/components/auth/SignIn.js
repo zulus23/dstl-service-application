@@ -4,6 +4,8 @@ import React, {Component} from "react";
 import './SignIn.css'
 import {Field, Form, Formik} from "formik";
 import {Button, TextField} from "@material-ui/core";
+import {login} from "../../modules/authReducer";
+import {connect} from "react-redux";
 
 class SignIn extends Component {
 
@@ -13,6 +15,7 @@ class SignIn extends Component {
                 <Formik initialValues={{userName: '', password: ''}} onSubmit={ (data,{setSubmitting}) => {
                  setSubmitting(true);
                  console.log(data);
+                    this.props.loginUser(data);
                  setSubmitting(false);
                 }}>
                     {({values, isSubmitting}) => (
@@ -27,7 +30,7 @@ class SignIn extends Component {
                                     Войти
                                 </Button>
                             </div>
-
+                            <h6>{this.props.token}</h6>
                             <pre>{JSON.stringify(values, null, 2)}</pre>
                         </Form>
 
@@ -40,5 +43,14 @@ class SignIn extends Component {
 
 
 }
-
-export default SignIn
+const mapStateToProps = (state) => {
+    return {
+        token: state.authReducer.token
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loginUser: e => dispatch(login(e))
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(SignIn)

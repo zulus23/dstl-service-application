@@ -1,3 +1,10 @@
+import { all } from "redux-saga/effects"
+import {authSaga} from "./authReducer";
+
+
 export default function* rootSaga() {
-    yield console.log("rootSaga reporting duty")
+    yield all([
+        authSaga()
+        ]
+    )
 }
