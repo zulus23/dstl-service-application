@@ -10,7 +10,7 @@ export const AUTHENTICATION_ERROR = 'gtk_authentication_error';
 
 const initialState = {
     authenticated: false,
-    error: {},
+    error: '',
     user: {},
     token: '',
 }
@@ -23,7 +23,7 @@ export default function authReducer(state = initialState, action) {
             return {...state, authenticated: true,token: action.payload.token}
         }
         case  AUTHENTICATION_ERROR : {
-            return {...state, error: action.payload.error}
+            return {...state, error: action.payload}
         }
         default : {
             return state
@@ -45,11 +45,14 @@ function* authorizathion(user) {
         const userData = user.payload;
 
         let token = yield call(api.authorization,userData);
+
         yield put(successAuthorized(token.data));
+
     } catch (e) {
+        console.log(e.message);
         yield put({
             type: AUTHENTICATION_ERROR,
-            payload: {error: e.message}
+            payload: e.message
         })
     }
 

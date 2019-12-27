@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {makeStyles} from '@material-ui/core/styles';
 import {NavLink} from "react-router-dom";
+import AuthorizationDialog from '../auth/AuthorizationDialog'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -20,10 +21,20 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const showDialog = (e) => {
+    const  dialog = AuthorizationDialog;
+    dialog();
+
+
+}
+
 const  Header  = (props) => {
 
+    const [openLogin, setOpenLogin] = React.useState(false);
     const  classes = useStyles()
-
+    const handlerOpenLogin =(e) => {
+        setOpenLogin(true);
+    }
 
         return (
             <AppBar position="static">
@@ -34,9 +45,11 @@ const  Header  = (props) => {
                     <Typography variant="h6" className={classes.title}>
                         News
                     </Typography>
-                    <Button color="inherit" component={NavLink} to={'/signin'} exact >Login</Button>
+                    <Button color="inherit" onClick={handlerOpenLogin}>Login</Button>
                 </Toolbar>
+                <AuthorizationDialog  open={openLogin}/>
             </AppBar>
+
         );
 
 }

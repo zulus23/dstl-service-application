@@ -60,7 +60,10 @@ class SignInController @Inject() (components: ControllerComponents,
           case e: ProviderException =>
             Unauthorized(Json.obj("message" -> Messages("invalid.credentials")))
         }
-      }
+      }.recover {
+      case e: ProviderException =>
+        Unauthorized(Json.obj("message" -> Messages("invalid.credentials")))
+    }
     }
 
 
