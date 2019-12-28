@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 
 import './App.css';
-import SignIn from "./components/auth/SignIn";
 import Header from "./components/header/Header";
 import {Switch, Route} from 'react-router-dom'
 import HomePage from "./pages/HomePage";
+import LoginForm from "./components/auth/SignIn";
 
 class App extends Component {
 
@@ -15,7 +15,7 @@ class App extends Component {
                 <div>
                     <Switch>
                         <Route exact path={'/'} component={HomePage}/>
-                        <Route exact path={'/signin'} component={SignIn}/>
+                        <Route exact path={'/signin'} component={LoginForm}/>
                     </Switch>
                 </div>
 

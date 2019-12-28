@@ -9,7 +9,7 @@ object SignInForm {
    */
   val form = Form(
     mapping(
-      "userName" -> text,
+      "username" -> text,
       "password" -> nonEmptyText,
 
     )(Data.apply)(Data.unapply)
@@ -18,12 +18,12 @@ object SignInForm {
   /**
    * The form data.
    *
-   * @param userName The email of the user.
+   * @param username The email of the user.
    * @param password The password of the user.
    *
    */
   case class Data(
-                   userName: String,
+                   username: String,
                    password: String
                   )
 }

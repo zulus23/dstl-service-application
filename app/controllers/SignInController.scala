@@ -44,7 +44,7 @@ class SignInController @Inject() (components: ControllerComponents,
 
   def authenticate: Action[UserCredential] =
     Action.async(parse.json[UserCredential]) { implicit request =>
-      val credentials = Credentials(request.body.userName, request.body.password)
+      val credentials = Credentials(request.body.username, request.body.password)
       credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
         userService.retrieve(loginInfo).flatMap {
           case Some(user) => silhouette.env.authenticatorService.create(loginInfo).map {
@@ -62,7 +62,7 @@ class SignInController @Inject() (components: ControllerComponents,
         }
       }.recover {
       case e: ProviderException =>
-        Unauthorized(Json.obj("message" -> Messages("invalid.credentials")))
+        Unauthorized(Json.obj("message" -> Messages("invalid.credentials.user")))
     }
     }
 

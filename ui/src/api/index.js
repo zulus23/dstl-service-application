@@ -33,6 +33,7 @@ client.defaults.timeout = 1000 * 60 * 8;
 
 export function authorization(user) {
     return client.post('/api/login',user).catch(function (error)  {
+          console.log(error.response);
           throw new Error(error.response.data.message.replace(/(["\"])/g,''));
     });
 }

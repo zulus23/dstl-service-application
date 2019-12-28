@@ -29,13 +29,14 @@ const showDialog = (e) => {
 }
 
 const  Header  = (props) => {
-
     const [openLogin, setOpenLogin] = React.useState(false);
     const  classes = useStyles()
     const handlerOpenLogin =(e) => {
         setOpenLogin(true);
     }
-
+     const handlerClose = () => {
+        setOpenLogin(false)
+     }
         return (
             <AppBar position="static">
                 <Toolbar>
@@ -47,7 +48,7 @@ const  Header  = (props) => {
                     </Typography>
                     <Button color="inherit" onClick={handlerOpenLogin}>Login</Button>
                 </Toolbar>
-                <AuthorizationDialog  open={openLogin}/>
+                <AuthorizationDialog  open={openLogin} handlerClose={handlerClose}/>
             </AppBar>
 
         );

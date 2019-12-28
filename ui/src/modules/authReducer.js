@@ -20,10 +20,10 @@ export default function authReducer(state = initialState, action) {
     switch (action.type) {
         case AUTHENTICATED : {
             console.log(action);
-            return {...state, authenticated: true,token: action.payload.token}
+            return {...state, authenticated: true,token: action.payload.token,error: ''}
         }
         case  AUTHENTICATION_ERROR : {
-            return {...state, error: action.payload}
+            return {...state, error: action.payload,authenticated: false,token:''}
         }
         default : {
             return state
