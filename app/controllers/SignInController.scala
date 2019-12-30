@@ -4,9 +4,9 @@ import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import authentication.forms.SignInForm
 import authentication.model.UserCredential
 import authentication.services.UserService
-import authentication.utils.{JWTEnv}
+import authentication.utils.JWTEnv
 import com.mohiva.play.silhouette
-import com.mohiva.play.silhouette.api.actions.SecuredActionBuilder
+import com.mohiva.play.silhouette.api.actions.{SecuredActionBuilder, SecuredRequest}
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.{EventBus, LoginEvent, LoginInfo, Silhouette}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
@@ -21,7 +21,6 @@ import play.api.i18n.{I18nSupport, Messages}
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request, Result}
 
-
 import scala.concurrent.{ExecutionContext, Future}
 
 
@@ -34,6 +33,9 @@ class SignInController @Inject() (components: ControllerComponents,
                                                  ex: ExecutionContext) extends AbstractController(components) with I18nSupport {
 
   implicit val emailCredentialFormat: OFormat[UserCredential] = Json.format[UserCredential]
+
+
+
 
   val SecuredAction: SecuredActionBuilder[JWTEnv, AnyContent] =
     silhouette.SecuredAction
@@ -116,5 +118,7 @@ class SignInController @Inject() (components: ControllerComponents,
     }
   }
 */
-
+  def verifyToken =  SecuredAction.async { implicit request: SecuredRequest[JWTEnv,AnyContent] =>
+      Future.successful(Ok(Json.toJson(request.authenticator.id)))
+  }
 }

@@ -20,8 +20,8 @@ client.defaults.timeout = 1000 * 60 * 8;
     console.log('client.interceptors.response ---- ',error.response.data);
     return Promise.reject(error);
 })*/
-/*let axiosConfig  =  (token) =>{
-
+let axiosConfig  =  (token) =>{
+    console.log(token)
     return {
         headers: {
             "Content-Type": "application/json;charset=UTF-8",
@@ -29,11 +29,17 @@ client.defaults.timeout = 1000 * 60 * 8;
         },
 
     }
-};*/
+};
 
-export function authorization(user) {
+export function authentication(user) {
     return client.post('/api/login',user).catch(function (error)  {
           console.log(error.response);
           throw new Error(error.response.data.message.replace(/(["\"])/g,''));
+    });
+}
+export function verify(token) {
+    console.log(token);
+    return client.post('/api/auth/verify',"",axiosConfig(token)).catch(function (error)  {
+        throw new Error(error.response.data.message.replace(/(["\"])/g,''));
     });
 }

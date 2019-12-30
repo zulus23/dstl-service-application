@@ -14,6 +14,7 @@ import rootReducer from "./rootReducer";
 import {Provider} from "react-redux";
 import rootSaga from "./modules/rootSaga";
 import {BrowserRouter} from "react-router-dom";
+import {AUTHENTICATED, verify, VERIFY_TOKEN} from "./modules/authReducer";
 
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -24,6 +25,13 @@ const createStoreWithMiddleware = applyMiddleware(sagaMiddleware);
 const store = createStore(rootReducer,composeEnhancers(createStoreWithMiddleware));
 
 sagaMiddleware.run(rootSaga);
+
+const user = localStorage.getItem('user');
+if(user) {
+    console.log(user);
+    store.dispatch(verify(user));
+}
+
 
 ReactDOM.render(<Provider store={store}>
     <BrowserRouter>

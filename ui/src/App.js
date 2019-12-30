@@ -5,6 +5,7 @@ import Header from "./components/header/Header";
 import {Switch, Route} from 'react-router-dom'
 import HomePage from "./pages/HomePage";
 import LoginForm from "./components/auth/SignIn";
+import noRequireAuth from './components/auth/no_require_auth'
 
 class App extends Component {
 
@@ -15,7 +16,7 @@ class App extends Component {
                 <div>
                     <Switch>
                         <Route exact path={'/'} component={HomePage}/>
-                        <Route exact path={'/signin'} component={LoginForm}/>
+                        <Route exact path={'/signin'} component={noRequireAuth(LoginForm)}/>
                     </Switch>
                 </div>
 

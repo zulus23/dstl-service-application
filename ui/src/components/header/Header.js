@@ -8,6 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import {makeStyles} from '@material-ui/core/styles';
 import {NavLink} from "react-router-dom";
 import AuthorizationDialog from '../auth/AuthorizationDialog'
+import {connect, useSelector} from "react-redux";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -31,6 +32,7 @@ const showDialog = (e) => {
 const  Header  = (props) => {
     const [openLogin, setOpenLogin] = React.useState(false);
     const  classes = useStyles()
+    const isAuthenticated = useSelector(state => state.authReducer.authenticated);
     const handlerOpenLogin =(e) => {
         setOpenLogin(true);
     }
@@ -46,7 +48,7 @@ const  Header  = (props) => {
                     <Typography variant="h6" className={classes.title}>
                         News
                     </Typography>
-                    <Button color="inherit" onClick={handlerOpenLogin}>Login</Button>
+                    {!isAuthenticated ?  <Button color="inherit" onClick={handlerOpenLogin}>Login</Button> : null}
                 </Toolbar>
                 <AuthorizationDialog  open={openLogin} handlerClose={handlerClose}/>
             </AppBar>
@@ -54,5 +56,7 @@ const  Header  = (props) => {
         );
 
 }
+
+
 
 export default Header;
