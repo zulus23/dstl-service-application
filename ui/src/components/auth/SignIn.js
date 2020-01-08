@@ -11,13 +11,12 @@ import isEmpty from "lodash/isEmpty";
 import styles from "./style";
 
 
+const MyTextField = ({placeholder, ...props}) => {
+    const [field] = useField(props)
 
-const MyTextField = ({placeholder,...props}) => {
-    const [field] =useField(props)
-
-     return (
-         <TextField placeholder={placeholder} {...field}/>
-     )
+    return (
+        <TextField placeholder={placeholder} {...field} style={{width:'100%', paddingBottom:'10px' ,textAlign: "center"}} />
+    )
 }
 
 
@@ -86,25 +85,27 @@ class SignInForm extends Component {
             // result: { success },
         } = this.props;
         return (
-            <div style={{width:'300px'}}>
+            <div className={classes.dialog}>
 
 
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit} autoComplete="off">
                     {status.error && (
                         <div className={classes.errorMessage}>
                             {this.props.error}
                         </div>
                     )}
-                    <MyTextField name='username'   placeholder='имя пользователя' type={"input"}/>
-                    <div>
-                        <MyTextField name='password' type={'password'}   placeholder='пароль'/>
+                    <div className={classes.field_input}>
+                        <MyTextField name='username' placeholder='имя пользователя' type={"input"}/>
                     </div>
-                    <div>
-                        <Button disabled={this.disableButton()} type="submit" fullWidth>
+                    <div className={classes.field_input}>
+                        <MyTextField name='password' type={'password'} placeholder='пароль'/>
+                    </div>
+                    <div style={{height:'100px',display:'flex', alignItems:'center' }}>
+                        <Button disabled={this.disableButton()} type="submit" fullWidth >
                             {isLoading ? <CircularProgress size={24}/> : "Войти"}
                         </Button>
                     </div>
-                    <pre>{JSON.stringify(status, null, 2)}</pre>
+                   {/* <pre>{JSON.stringify(status, null, 2)}</pre>*/}
 
                 </Form>
 

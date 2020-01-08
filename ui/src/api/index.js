@@ -43,3 +43,8 @@ export function verify(token) {
         throw new Error(error.response.data.message.replace(/(["\"])/g,''));
     });
 }
+export function userEnterprise(token) {
+    return client.post('/api/user/enterprise',"",axiosConfig(token)).catch(function (error)  {
+        throw new Error(error.response.data.message.replace(/(["\"])/g,''));
+    });
+}

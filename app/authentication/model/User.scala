@@ -14,6 +14,7 @@ case class User(userId: Int, userName: String, idService: Int, description: Opti
 object User {
 
   implicit val userToJson = Json.writes[User]
+
 }
 case class UserPassword(userId: Int,userName: String,password:String)
 

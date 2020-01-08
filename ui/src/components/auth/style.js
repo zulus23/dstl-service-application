@@ -1,7 +1,9 @@
 const styles = theme => {
-    // console.log(theme.palette.error);
     return {
-        errorMessage: { color: theme.palette.error[400], textAlign: "center" },
+        errorMessage: { color: theme.palette.error.dark, textAlign: "center"  },
+        dialog :{width:'300px', height:'200px'},
+        field_input: {width:'100%' },
+
     };
 };
 

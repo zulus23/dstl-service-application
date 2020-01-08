@@ -9,6 +9,9 @@ import {makeStyles} from '@material-ui/core/styles';
 import {NavLink} from "react-router-dom";
 import AuthorizationDialog from '../auth/AuthorizationDialog'
 import {connect, useSelector} from "react-redux";
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Menu from "@material-ui/core/Menu";
+import CurrentUser from "./CurrentUser";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -23,40 +26,40 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const showDialog = (e) => {
-    const  dialog = AuthorizationDialog;
+    const dialog = AuthorizationDialog;
     dialog();
 
 
 }
 
-const  Header  = (props) => {
+
+const Header = (props) => {
     const [openLogin, setOpenLogin] = React.useState(false);
-    const  classes = useStyles()
+    const classes = useStyles()
     const isAuthenticated = useSelector(state => state.authReducer.authenticated);
-    const handlerOpenLogin =(e) => {
+    const handlerOpenLogin = (e) => {
         setOpenLogin(true);
     }
-     const handlerClose = () => {
+    const handlerClose = () => {
         setOpenLogin(false)
-     }
-        return (
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" className={classes.title}>
-                        News
-                    </Typography>
-                    {!isAuthenticated ?  <Button color="inherit" onClick={handlerOpenLogin}>Login</Button> : null}
-                </Toolbar>
-                <AuthorizationDialog  open={openLogin} handlerClose={handlerClose}/>
-            </AppBar>
+    }
+    return (
+        <AppBar position="static">
+            <Toolbar>
+                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                    <MenuIcon/>
+                </IconButton>
+                <Typography variant="h6" className={classes.title}>
+                    News
+                </Typography>
+                {!isAuthenticated ? <Button color="inherit" onClick={handlerOpenLogin}>Login</Button> : <CurrentUser/>}
+            </Toolbar>
+            <AuthorizationDialog open={openLogin} handlerClose={handlerClose}/>
+        </AppBar>
 
-        );
+    );
 
 }
-
 
 
 export default Header;

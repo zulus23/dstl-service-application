@@ -149,4 +149,13 @@ class UserRepository  @Inject() (
     result
   }
 
+  def findEnterpriseByUser(userName:String):Future[Seq[Enterprise]] = db.run {
+    val results = ( for {
+      user <- users.filter(_.name.toLowerCase === userName.toLowerCase)
+      ue <- userEnterprises if ue.idUser === user.id
+      enterprise <- enterprises if enterprise.id === ue.idEnterprise
+    } yield(enterprise)).result
+      results
+  }
+
 }

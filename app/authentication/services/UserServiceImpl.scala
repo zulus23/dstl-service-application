@@ -1,6 +1,6 @@
 package authentication.services
 import authentication.daos.UserDAO
-import authentication.model.User
+import authentication.model.{Enterprise, User}
 import authentication.repository.UserRepository
 import com.mohiva.play.silhouette.api.LoginInfo
 import javax.inject.Inject
@@ -20,5 +20,9 @@ class UserServiceImpl @Inject()(userRepository: UserRepository)(implicit ex: Exe
         }
       }
     }.map(_.headOption)
+  }
+
+  override def enterprises(username: String): Future[Seq[Enterprise]] =  {
+    userRepository.findEnterpriseByUser(username)
   }
 }
