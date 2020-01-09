@@ -26,7 +26,7 @@ const store = createStore(rootReducer,composeEnhancers(createStoreWithMiddleware
 
 sagaMiddleware.run(rootSaga);
 
-const user = localStorage.getItem('user');
+const user = localStorage.getItem('userToken');
 if(user) {
     console.log(user);
     store.dispatch(verify(user));

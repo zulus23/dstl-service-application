@@ -78,8 +78,9 @@ function* verifyToken(data) {
         const token = data.payload;
         console.log(data);
         let tokenData = yield call(api.verify, token);
-        console.log(tokenData);
+        console.log('tokenData ---- ', tokenData);
         yield put(successAuthorized(token));
+        yield put(loadCurrentUser(token));
 
 
     } catch (e) {

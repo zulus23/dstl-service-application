@@ -48,7 +48,7 @@ export function userEnterprise(token) {
     });
 }
 export function userInfo(token) {
-    return client.post('/api/user/info',"",axiosConfig(token)).catch(function (error)  {
+    return client.post('/api/user/userInfo',"",axiosConfig(token)).catch(function (error)  {
         throw new Error(error.response.data.message.replace(/(["\"])/g,''));
     });
 }
