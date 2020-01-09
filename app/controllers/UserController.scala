@@ -27,5 +27,9 @@ class UserController @Inject() (components: ControllerComponents,
     val result =  userService.enterprises(user)
     result.map(enterprise => Ok(Json.toJson(enterprise)))
   }
-
+  def userInfo()=  SecuredAction.async{ implicit request: SecuredRequest[JWTEnv,AnyContent] =>
+    val user =  request.authenticator.loginInfo.providerKey
+    val result =  userService.userInfo(user)
+    result.map(enterprise => Ok(Json.toJson(enterprise)))
+  }
 }

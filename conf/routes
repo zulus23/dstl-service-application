@@ -12,6 +12,7 @@ POST        /api/login                  controllers.SignInController.authenticat
 POST        /api/auth/verify            controllers.SignInController.verifyToken
 POST        /api/work                   controllers.HomeController.index
 POST        /api/user/enterprise        controllers.UserController.userEnterprise
+POST        /api/user/userInfo          controllers.UserController.userInfo
 
 
 # An example controller showing how to use dependency injection
