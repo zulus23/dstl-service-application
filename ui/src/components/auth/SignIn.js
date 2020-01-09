@@ -11,11 +11,11 @@ import isEmpty from "lodash/isEmpty";
 import styles from "./style";
 
 
-const MyTextField = ({placeholder, ...props}) => {
+const MyTextField = ({placeholder, type,...props}) => {
     const [field] = useField(props)
 
     return (
-        <TextField placeholder={placeholder} {...field} style={{width:'100%', paddingBottom:'10px' ,textAlign: "center"}} />
+        <TextField placeholder={placeholder} type={type}{...field} style={{width:'100%', paddingBottom:'10px' ,textAlign: "center"}} />
     )
 }
 
@@ -97,7 +97,7 @@ class SignInForm extends Component {
                         <MyTextField name='username' placeholder='имя пользователя' type={"input"}/>
                     </div>
                     <div className={classes.field_input}>
-                        <MyTextField name='password' type={'password'} placeholder='пароль'/>
+                        <MyTextField name='password'  placeholder='пароль' type={"password"}/>
                     </div>
                     <div style={{height:'100px',display:'flex', alignItems:'center' }}>
                         <Button disabled={this.disableButton()} type="submit" fullWidth >
