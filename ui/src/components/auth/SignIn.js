@@ -23,7 +23,6 @@ const MyTextField = ({placeholder, ...props}) => {
 class SignInForm extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         const {error, errors, status, values, setStatus, result} = this.props;
-        console.log(this.props);
         //setFieldError('userName', this.props.error);
         if (error && !status.error && status.afterSubmit) {
             // set server error to status error value

@@ -21,7 +21,6 @@ client.defaults.timeout = 1000 * 60 * 8;
     return Promise.reject(error);
 })*/
 let axiosConfig  =  (token) =>{
-    console.log(token)
     return {
         headers: {
             "Content-Type": "application/json;charset=UTF-8",
@@ -45,6 +44,11 @@ export function verify(token) {
 }
 export function userEnterprise(token) {
     return client.post('/api/user/enterprise',"",axiosConfig(token)).catch(function (error)  {
+        throw new Error(error.response.data.message.replace(/(["\"])/g,''));
+    });
+}
+export function userInfo(token) {
+    return client.post('/api/user/info',"",axiosConfig(token)).catch(function (error)  {
         throw new Error(error.response.data.message.replace(/(["\"])/g,''));
     });
 }

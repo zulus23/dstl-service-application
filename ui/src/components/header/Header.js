@@ -11,7 +11,9 @@ import AuthorizationDialog from '../auth/AuthorizationDialog'
 import {connect, useSelector} from "react-redux";
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Menu from "@material-ui/core/Menu";
-import CurrentUser from "./CurrentUser";
+import CurrentUserMenu from "./CurrentUserMenu";
+import Enterprise from "../common/Enterprise";
+import RangeDate from "../common/RangeDate";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -49,10 +51,14 @@ const Header = (props) => {
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                     <MenuIcon/>
                 </IconButton>
+                <Enterprise/>
+                <RangeDate/>
                 <Typography variant="h6" className={classes.title}>
                     News
                 </Typography>
-                {!isAuthenticated ? <Button color="inherit" onClick={handlerOpenLogin}>Login</Button> : <CurrentUser/>}
+                {!isAuthenticated ? <Button color="inherit" onClick={handlerOpenLogin}>Войти</Button> : <CurrentUserMenu/>}
+
+
             </Toolbar>
             <AuthorizationDialog open={openLogin} handlerClose={handlerClose}/>
         </AppBar>

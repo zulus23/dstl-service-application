@@ -3,13 +3,17 @@ import Menu from "@material-ui/core/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
+import {useDispatch} from "react-redux";
+import {logout} from "../../modules/authReducer";
 
 
 
 
 
-const CurrentUser = (props) => {
+const CurrentUserMenu = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const userLogout = useDispatch();
+
     const isMenuOpen = Boolean(anchorEl);
     const handleProfileMenuOpen = event => {
         setAnchorEl(event.currentTarget);
@@ -21,7 +25,9 @@ const CurrentUser = (props) => {
         setAnchorEl(null);
 
     };
-
+    const handleMenuLoginOut = () => {
+       userLogout(logout())
+    }
 
 
     const menuId = 'primary-search-account-menu';
@@ -36,7 +42,7 @@ const CurrentUser = (props) => {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={handleMenuLoginOut}>Выйти</MenuItem>
         </Menu>
     );
 
@@ -63,4 +69,4 @@ const CurrentUser = (props) => {
     );
 };
 
-export default CurrentUser;
+export default CurrentUserMenu;
