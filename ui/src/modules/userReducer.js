@@ -6,7 +6,7 @@ import * as api from "../api";
 
 export const GTK_LOAD_LIST_ENTERPRISE = 'GTK_LOAD_LIST_ENTERPRISE';
 export const GTK_LOAD_CURRENT_USER_INFO = 'GTK_LOAD_CURRENT_USER_INFO';
-
+export const GTK_CHANGE_CURRENT_ENTERPRISE = 'GTK_CHANGE_CURRENT_ENTERPRISE';
 
 
 const initialState = {
@@ -27,9 +27,14 @@ export default  function userReducer(state = initialState, action) {
          case GTK_LOAD_CURRENT_USER_INFO : {
              return {...state, currentUser: action.payload,selectedEnterprise: action.payload.idService}
          }
+         case GTK_CHANGE_CURRENT_ENTERPRISE : {
+             return {...state, selectedEnterprise: action.payload.idService}
+         }
          case GTK_CLEAN_CURRENT_USER : {
              return {...state,enterprises: null, currentUser : null, selectedEnterprise:  null }
          }
+
+
 
 
          default : {
@@ -72,5 +77,13 @@ const userInfoSet = (data) => {
     return {
         type: GTK_LOAD_CURRENT_USER_INFO,
         payload:data
+    }
+}
+
+export const changeCurrentEnterprise = (idEnterprise) => {
+    return {
+        type: GTK_CHANGE_CURRENT_ENTERPRISE,
+        payload: {idService:idEnterprise}
+
     }
 }

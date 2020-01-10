@@ -1,15 +1,19 @@
 import React, {useEffect} from 'react';
-import {useSelector, shallowEqual} from "react-redux";
+import {useSelector, shallowEqual, useDispatch} from "react-redux";
 import {SelectBox} from "devextreme-react";
 import ArrayStore from 'devextreme/data/array_store';
+import {changeCurrentEnterprise} from "../../modules/userReducer";
 
 const Enterprise = (props) => {
     const enterprises = useSelector(state => state.userReducer.enterprises, shallowEqual);
-    const selectedEnterprise = useSelector(state => state.userReducer.selectedEnterprise);
+    const selectedEnterprise = useSelector(state => state.userReducer.selectedEnterprise,shallowEqual);
+    const change = useDispatch()
 
 
-    useEffect( () => {console.log("selectedEnterprise - ", selectedEnterprise)
-    })
+    const changeValueEnterprise = (event) => {
+          console.log(event.value);
+          change(changeCurrentEnterprise(event.value));
+    }
 
     const data = new ArrayStore({
         data: enterprises,
@@ -17,11 +21,12 @@ const Enterprise = (props) => {
     });
     return (
 
-        < SelectBox
-            dataSource={data}
+        <SelectBox
+            dataSource={enterprises}
             displayExpr="name"
             valueExpr="id"
-            defaultValue={selectedEnterprise}
+            value={selectedEnterprise}
+            onValueChanged={changeValueEnterprise}
         />
     )
 
