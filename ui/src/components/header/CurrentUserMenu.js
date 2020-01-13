@@ -16,6 +16,7 @@ const CurrentUserMenu = (props) => {
 
     const isMenuOpen = Boolean(anchorEl);
     const handleProfileMenuOpen = event => {
+        console.log(event);
         setAnchorEl(event.currentTarget);
     };
 
@@ -34,9 +35,10 @@ const CurrentUserMenu = (props) => {
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            getContentAnchorEl={null}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             id={menuId}
-            keepMounted
+
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={isMenuOpen}
             onClose={handleMenuClose}

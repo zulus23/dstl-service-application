@@ -22,7 +22,7 @@ const Enterprise = (props) => {
     return (
 
         <SelectBox
-            dataSource={enterprises}
+            dataSource={data}
             displayExpr="name"
             valueExpr="id"
             value={selectedEnterprise}

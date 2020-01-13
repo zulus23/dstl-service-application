@@ -53,6 +53,7 @@ const Header = (props) => {
                 </IconButton>
                 <Enterprise/>
                 <RangeDate/>
+
                 <Typography variant="h6" className={classes.title}>
                     News
                 </Typography>
