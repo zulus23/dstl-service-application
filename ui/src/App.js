@@ -11,6 +11,9 @@ import {Switch, Route} from 'react-router-dom'
 import HomePage from "./pages/HomePage";
 import LoginForm from "./components/auth/SignIn";
 import noRequireAuth from './components/auth/no_require_auth'
+import requireAuth from './components/auth/require_auth'
+import TransportPage from "./pages/transport/TransportPage";
+import AuthorizationDialog from "./components/auth/AuthorizationDialog";
 
 class App extends Component {
 
@@ -30,6 +33,8 @@ class App extends Component {
                     <Switch>
                         <Route exact path={'/'} component={HomePage}/>
                         <Route exact path={'/signin'} component={noRequireAuth(LoginForm)}/>
+                        <Route  path={'/transport'} component={requireAuth(TransportPage)}/>
+
                     </Switch>
                 </div>
 

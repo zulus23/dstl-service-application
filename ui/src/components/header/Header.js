@@ -14,6 +14,7 @@ import Menu from "@material-ui/core/Menu";
 import CurrentUserMenu from "./CurrentUserMenu";
 import Enterprise from "../common/Enterprise";
 import RangeDate from "../common/RangeDate";
+import DrawerLeft from "./DrawerLeft";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -35,8 +36,11 @@ const showDialog = (e) => {
 }
 
 
+
 const Header = (props) => {
     const [openLogin, setOpenLogin] = React.useState(false);
+    const [openDrawer,setOpenDrawer] = React.useState(false)
+
     const classes = useStyles()
     const isAuthenticated = useSelector(state => state.authReducer.authenticated);
     const handlerOpenLogin = (e) => {
@@ -45,10 +49,24 @@ const Header = (props) => {
     const handlerClose = () => {
         setOpenLogin(false)
     }
+    const openDrawerHandler = () => {
+         setOpenDrawer(!openDrawer);
+    }
+    const toggleDrawer = (open) => event => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+
+        setOpenDrawer(open);
+    };
+
     return (
         <AppBar position="static">
             <Toolbar>
-                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu"
+                   onClick={openDrawerHandler}
+                >
+                 <DrawerLeft open={openDrawer} toggleDrawer={toggleDrawer}/>
                     <MenuIcon/>
                 </IconButton>
                 <Enterprise/>

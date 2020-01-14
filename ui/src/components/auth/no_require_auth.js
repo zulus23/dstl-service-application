@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import authReducer from "../../modules/authReducer";
 export default function (ComposedComponent) {
     class NotAuthentication extends Component {
         componentWillMount() {
@@ -21,7 +22,7 @@ export default function (ComposedComponent) {
         }
     }
     function mapStateToProps(state) {
-        return { authenticated: state.auth.authenticated };
+        return { authenticated: state.authReducer.authenticated };
     }
     return connect(mapStateToProps)(NotAuthentication);
 }

@@ -7,8 +7,6 @@ const RangeDate = () => {
     const [dateBeginValue,setDateBegin] = useState(dayjs(new Date()))
     const [dateEndValue,setDateEnd] = useState(dayjs(new Date()).add(2, 'day'))
 
-
-
     const  changeDateBegin = (event) => {
         setDateBegin(dayjs(event.value).locale('ru'))
     }
