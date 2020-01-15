@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import authReducer from "../../modules/authReducer";
 export default function (ComposedComponent) {
+
     class Authentication extends Component {
         componentWillMount() {
             if (!this.props.authenticated) {
