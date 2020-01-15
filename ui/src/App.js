@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import ruMessages from 'devextreme/localization/messages/ru.json';
 import 'devextreme-intl';
 import { locale, loadMessages } from 'devextreme/localization';
@@ -7,33 +7,62 @@ import { locale, loadMessages } from 'devextreme/localization';
 
 import './App.css';
 import Header from "./components/header/Header";
-import {Switch, Route} from 'react-router-dom'
+import {Switch, Route, Redirect} from 'react-router-dom'
 import HomePage from "./pages/HomePage";
 import LoginForm from "./components/auth/SignIn";
-import noRequireAuth from './components/auth/no_require_auth'
-import requireAuth from './components/auth/require_auth'
 import TransportPage from "./pages/transport/TransportPage";
 import AuthorizationDialog from "./components/auth/AuthorizationDialog";
+import {useSelector} from "react-redux";
+import authReducer from "./modules/authReducer";
 
-class App extends Component {
+const PrivateRoute = ({ children, ...rest }) =>{
+    const isAuthenticated = useSelector(state => state.authReducer.authenticated);
+
+    return (
+        <Route
+            {...rest}
+            render={({ location }) =>
+                isAuthenticated ? (
+                    children
+                ) : (
+                    <Redirect
+                        to={{
+                            pathname: "/signin",
+                            state: { from: location }
+                        }}
+                    />
+                )
+            }
+        />
+    );
+}
 
 
-    constructor(props, context) {
-        super(props, context);
+const App = (props) => {
+    //TODO load russion language
+    loadMessages(ruMessages);
+    locale('ru');
+
+    useEffect((props)=> {
+        console.log(props);
         loadMessages(ruMessages);
         locale('ru');
+    },[])
 
-    }
 
-    render() {
+
+
         return (
             <div className="App">
                 <Header/>
                 <div>
                     <Switch>
                         <Route exact path={'/'} component={HomePage}/>
-                        <Route exact path={'/signin'} component={noRequireAuth(LoginForm)}/>
-                        <Route  path={'/transport'} component={requireAuth(TransportPage)}/>
+                        <Route exact path={'/signin'} component={LoginForm}/>
+                        <PrivateRoute path="/transport">
+                            <TransportPage/>
+                        </PrivateRoute>
+
 
                     </Switch>
                 </div>
@@ -41,7 +70,7 @@ class App extends Component {
             </div>
         );
 
-    }
+
 }
 
 export default App;
