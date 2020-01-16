@@ -1,6 +1,6 @@
 import { all } from "redux-saga/effects"
-import {authSaga} from "./authReducer";
-import {userInfoSaga} from "./userReducer";
+import {authSaga} from "./auth";
+import {userInfoSaga} from "./user";
 
 
 export default function* rootSaga() {

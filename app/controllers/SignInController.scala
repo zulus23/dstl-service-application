@@ -118,7 +118,8 @@ class SignInController @Inject() (components: ControllerComponents,
     }
   }
 */
-  def verifyToken =  SecuredAction.async { implicit request: SecuredRequest[JWTEnv,AnyContent] =>
+  def verifyToken =  SecuredAction.async {
+    implicit request: SecuredRequest[JWTEnv,AnyContent] =>
       Future.successful(Ok(Json.toJson(request.authenticator.id)))
   }
 }

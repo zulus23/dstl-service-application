@@ -2,11 +2,11 @@ import React, {useEffect} from 'react';
 import {useSelector, shallowEqual, useDispatch} from "react-redux";
 import {SelectBox} from "devextreme-react";
 import ArrayStore from 'devextreme/data/array_store';
-import {changeCurrentEnterprise} from "../../modules/userReducer";
+import {changeCurrentEnterprise} from "../../redux/modules/user";
 
 const Enterprise = (props) => {
-    const enterprises = useSelector(state => state.userReducer.enterprises, shallowEqual);
-    const selectedEnterprise = useSelector(state => state.userReducer.selectedEnterprise,shallowEqual);
+    const enterprises = useSelector(state => state.user.enterprises, shallowEqual);
+    const selectedEnterprise = useSelector(state => state.user.selectedEnterprise,shallowEqual);
     const change = useDispatch()
 
 

@@ -1,5 +1,5 @@
 import {call, put, takeLatest,all} from 'redux-saga/effects'
-import * as api from '../api/index'
+import * as api from '../../api'
 import {cleanCurrentUser, GTK_LOAD_CURRENT_USER, loadCurrentUser} from "./commonAction";
 
 
@@ -18,7 +18,7 @@ const initialState = {
 }
 
 
-export default function authReducer(state = initialState, action) {
+export default function reducer(state = initialState, action) {
     switch (action.type) {
         case AUTHENTICATED : {
 

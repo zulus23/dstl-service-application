@@ -2,7 +2,7 @@ import {call,all, put, takeLatest} from "redux-saga/effects";
 
 
 import {GTK_CLEAN_CURRENT_USER, GTK_LOAD_CURRENT_USER} from "./commonAction";
-import * as api from "../api";
+import * as api from "../../api";
 
 export const GTK_LOAD_LIST_ENTERPRISE = 'GTK_LOAD_LIST_ENTERPRISE';
 export const GTK_LOAD_CURRENT_USER_INFO = 'GTK_LOAD_CURRENT_USER_INFO';
@@ -17,7 +17,7 @@ const initialState = {
 }
 
 
-export default  function userReducer(state = initialState, action) {
+export default  function reducer(state = initialState, action) {
      switch (action.type) {
 
          case GTK_LOAD_LIST_ENTERPRISE : {

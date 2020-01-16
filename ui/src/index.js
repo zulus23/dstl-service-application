@@ -12,9 +12,9 @@ import * as serviceWorker from './serviceWorker';
 import {applyMiddleware, compose, createStore} from "redux";
 import rootReducer from "./rootReducer";
 import {Provider} from "react-redux";
-import rootSaga from "./modules/rootSaga";
+import rootSaga from "./redux/modules/rootSaga";
 import {BrowserRouter} from "react-router-dom";
-import {AUTHENTICATED, verify, VERIFY_TOKEN} from "./modules/authReducer";
+import {AUTHENTICATED, verify, VERIFY_TOKEN} from "./redux/modules/auth";
 
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

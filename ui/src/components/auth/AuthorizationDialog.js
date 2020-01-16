@@ -18,7 +18,7 @@ function PaperComponent(props) {
 
 const AuthorizationDialog = (props) => {
     const {open, handlerClose} = props;
-    const isAuthenticated = useSelector(state => state.authReducer.authenticated)
+    const isAuthenticated = useSelector(state => state.auth.authenticated)
     return (
 
         <Dialog

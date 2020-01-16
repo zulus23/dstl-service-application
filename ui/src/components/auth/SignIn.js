@@ -1,8 +1,8 @@
-import React,{Fragment} from "react";
+import React, {Fragment, useEffect} from "react";
 import './SignIn.css'
-import {Form, Formik, useField} from "formik";
+import {Form, Formik, useField, } from "formik";
 import {Button, CircularProgress, makeStyles, TextField} from "@material-ui/core";
-import {login} from "../../modules/authReducer";
+import {login} from "../../redux/modules/auth";
 import {useDispatch, useSelector} from "react-redux";
 import {
     useHistory,
@@ -30,97 +30,47 @@ const MyTextField = ({placeholder, type, ...props}) => {
 }
 
 
-const handleSubmit = async (values, {setSubmitting, setStatus, props}) => {
-    const userData = trimVal(values);
-    props.loginUser(userData);
-    setSubmitting(false);
-    setStatus({afterSubmit: true});
-};
 
 const SignInForm = (props) => {
-    const isAuthenticated = useSelector(state => state.authReducer.authenticated);
-    const error = useSelector(state => state.authReducer.error);
+    const isAuthenticated = useSelector(state => state.auth.authenticated);
+    const error = useSelector(state => state.auth.error);
+
     const loginDispatch = useDispatch();
     const classes = useStyles();
     let history = useHistory();
     let location = useLocation();
-
     let { from } = location.state || { from: { pathname: "/" } };
+    const t = async (userData) => {
 
-    /*const componentDidUpdate = (prevProps, prevState, snapshot) => {
-        const {error, errors, status, values, setStatus, result} = this.props;
-        //setFieldError('userName', this.props.error);
-        if (error && !status.error && status.afterSubmit) {
-            // set server error to status error value
-            // set status after submit to false
-            setStatus({error, afterSubmit: false});
+        await loginDispatch(login(userData));
+    }
+    const handlerSubmit = (values, actions) => {
+
+        console.log(actions);
+        actions.setSubmitting(true);
+        const userData = trimVal(values);
+        t(userData);
+
+        actions.setSubmitting(false);
+    }
+    useEffect(() => {
+
+        if (isAuthenticated) {
+            history.replace(from);
+        } else {
+
         }
-        // If server send error and
-        // current status error is not null and
-        // values is changed
-        if (error && status.error && prevProps.values !== values && !status.afterSubmit) {
-            // set error status to null
-            setStatus({error: null});
-        }
-
-        // if server send error and
-        // current status error is not null and
-        // and the error from server is different than the error status
-        // and after form submission
-        if (error && status.error && error !== status.error && status.afterSubmit) {
-            // renew error status
-            setStatus({error});
-        }
-
-        // If server send error
-        // and server error contain error property
-        // and previous formik errors is equal to current formik error
-        // and after user submit the form
-        if (error && error.errors && prevProps.errors === errors && status.afterSubmit) {
-            this.props.setFieldError(error.errors[0].path, error.errors[0].message);
-        }
-
-        // If registration succeed
-        if (!isEmpty(result) && result.success && status.afterSubmit) {
-            // Send verification message
-            this.props.sendVerificationEmail(result.signup_data.email);
-            console.log(result.message);
-        }
-    }*/
-
-   /* const disableButton = () => {
-        const {
-            isLoading,
-            errors,
-            isSubmitting,
-            dirty,
-            status,
-            //result: { success },
-        } = this.props;
-        return /!*success ||*!/ isSubmitting || !isEmpty(errors) || Boolean(status.error) || !dirty || isLoading;
-    };
-*/
-
+    },[isAuthenticated,error])
     return (
         <div className={classes.dialog}>
-
-            <Formik initialValues={{username: "", password: ""}} onSubmit={(values, {setSubmitting}) => {
-                setSubmitting(true);
-
-                const userData = trimVal(values);
-                loginDispatch(login(userData));
-
-                // make async call
-                history.replace(from);
-                console.log("submit: ", values);
-                setSubmitting(false);
-            }}>
+            <Formik initialValues={{username: "", password: ""}} onSubmit={handlerSubmit }>
                 {({ values, errors, touched,isSubmitting }) => (
 
                     <Fragment>
-                        {error && touched ? (
-                            <div>{error}</div>) : null}
+
+
                     <Form autoComplete="off">
+                        {(error ) ? <div>{JSON.stringify(touched, null, 2)}</div> :null}
 
                         <div className={classes.field_input}>
                             <MyTextField name='username' placeholder='имя пользователя' type={"input"}/>

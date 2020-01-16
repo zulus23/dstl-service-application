@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useDispatch} from "react-redux";
-import {logout} from "../../modules/authReducer";
+import {logout} from "../../redux/modules/auth";
 
 
 

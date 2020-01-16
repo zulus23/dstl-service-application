@@ -42,7 +42,7 @@ const Header = (props) => {
     const [openDrawer,setOpenDrawer] = React.useState(false)
 
     const classes = useStyles()
-    const isAuthenticated = useSelector(state => state.authReducer.authenticated);
+    const isAuthenticated = useSelector(state => state.auth.authenticated);
     const handlerOpenLogin = (e) => {
         setOpenLogin(true);
     }
