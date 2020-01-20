@@ -1,5 +1,5 @@
-import React, {Fragment, useEffect, useState} from 'react';
-import { DateBox } from 'devextreme-react'
+import React, {Fragment, useState} from 'react';
+import {DateBox} from 'devextreme-react'
 
 import 'dayjs/locale/ru'
 import dayjs from "dayjs"; // load on demand

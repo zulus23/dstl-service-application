@@ -1,19 +1,16 @@
 import React, {Fragment, useEffect} from "react";
 import './SignIn.css'
-import {ErrorMessage, Form, Formik, useField,} from "formik";
+import {Form, Formik, useField,} from "formik";
 import {Button, CircularProgress, makeStyles, TextField} from "@material-ui/core";
-import {login} from "../../redux/modules/auth";
+import {clearingError, login} from "../../redux/modules/auth";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    useHistory,
-    useLocation
-} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 
 
-const useStyles = makeStyles( theme => {
+const useStyles = makeStyles(theme => {
     return {
         errorMessage: {color: theme.palette.error.dark, textAlign: "center"},
-        dialog: {width: '300px', height: '200px', margin: '10px auto'},
+        dialog: {width: '300px', height: '200px', margin: '10px auto',border:'2px solid yellow'},
         field_input: {width: '100%'},
 
     };
@@ -25,7 +22,7 @@ const MyTextField = ({placeholder, type, ...props}) => {
 
     return (
         <TextField placeholder={placeholder} type={type}{...field}
-                   style={{width: '100%', paddingBottom: '10px', textAlign: "center"}} onBlur={props.handleBlur}/>
+                   style={{width: '100%', paddingBottom: '10px', textAlign: "center"}} onBlur={props.handleBlur} margin="dense" variant="outlined"/>
     )
 }
 
@@ -33,11 +30,13 @@ const SignInForm = (props) => {
     const isAuthenticated = useSelector(state => state.auth.authenticated);
     const error = useSelector(state => state.auth.error);
 
+
     const loginDispatch = useDispatch();
+    const errorDispatch = useDispatch();
     const classes = useStyles();
     let history = useHistory();
     let location = useLocation();
-    let { from } = location.state || { from: { pathname: "/" } };
+    let {from} = location.state || {from: {pathname: "/"}};
     const t = async (userData) => {
 
         await loginDispatch(login(userData));
@@ -47,58 +46,50 @@ const SignInForm = (props) => {
 
 
     const handlerSubmit = (values, actions) => {
-
-        console.log(actions);
         actions.setSubmitting(true);
         const userData = trimVal(values);
-        const k =  t(userData);
-        console.log(k);
-        k.then(e => {
-            console.log(e);
-            console.log("Promise");
-
-            actions.setErrors({error:e})
-        });
+        const k = t(userData);
         actions.setSubmitting(false);
     }
 
     useEffect(() => {
-
         if (isAuthenticated) {
             history.replace(from);
         } else {
-         console.log("props ",props)
+            console.log("props ", props)
         }
-    },[isAuthenticated,error])
-    const  handleBlur = (e) => {
-        console.log(e);
+    })
+    const handleBlur = (e) => {
+        errorDispatch(clearingError());
     }
 
     return (
+        <div className={'box'}>
         <div className={classes.dialog}>
-            <Formik initialValues={{username: "", password: ""}} onSubmit={handlerSubmit }>
-                {({ values, errors, touched,isSubmitting }) => (
+            <Formik initialValues={{username: "", password: ""}} onSubmit={handlerSubmit}>
+                {({values, errors, touched, isSubmitting, dirty}) => (
 
                     <Fragment>
+                        {(error) ? <div>{error}</div> : null}
+                        <Form autoComplete="off">
 
-                    <Form autoComplete="off">
-                        {(error ) ? <div>{JSON.stringify(touched, null, 2)}</div> :null}
-                        <ErrorMessage name="error"/>
-                        <div className={classes.field_input}>
-                            <MyTextField name='username' placeholder='имя пользователя' type={"input"}  handleBlur={handleBlur}/>
-                        </div>
-                        <div className={classes.field_input}>
-                            <MyTextField name='password' placeholder='пароль' type={"password"}/>
-                        </div>
-                        <div style={{height: '100px', display: 'flex', alignItems: 'center'}}>
-                            <Button disabled={isSubmitting} type="submit" fullWidth>
-                                {isSubmitting ? <CircularProgress size={24}/> : "Войти"}
-                            </Button>
-                        </div>
-                    </Form>
+                            <div className={classes.field_input}>
+                                <MyTextField name='username' placeholder='имя пользователя' type={"input"}
+                                             handleBlur={handleBlur}/>
+                            </div>
+                            <div className={classes.field_input}>
+                                <MyTextField name='password' placeholder='пароль' type={"password"}/>
+                            </div>
+                            <div style={{height: '100px', display: 'flex', alignItems: 'center'}}>
+                                <Button disabled={isSubmitting} type="submit" fullWidth variant={"outlined"}>
+                                    {isSubmitting ? <CircularProgress size={24}/> : "Войти"}
+                                </Button>
+                            </div>
+                        </Form>
                     </Fragment>
-                    )}
+                )}
             </Formik>
+        </div>
         </div>
     )
 }

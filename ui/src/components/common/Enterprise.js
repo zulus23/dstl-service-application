@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {useSelector, shallowEqual, useDispatch} from "react-redux";
+import React from 'react';
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {SelectBox} from "devextreme-react";
 import ArrayStore from 'devextreme/data/array_store';
 import {changeCurrentEnterprise} from "../../redux/modules/user";

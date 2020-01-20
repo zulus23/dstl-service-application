@@ -1,18 +1,16 @@
-import React, {Component, useEffect} from 'react';
+import React from 'react';
 import ruMessages from 'devextreme/localization/messages/ru.json';
 import 'devextreme-intl';
-import {locale, loadMessages} from 'devextreme/localization';
+import {loadMessages, locale} from 'devextreme/localization';
 
 
 import './App.css';
 import Header from "./components/header/Header";
-import {Switch, Route, Redirect} from 'react-router-dom'
+import {Redirect, Route, Switch} from 'react-router-dom'
 import HomePage from "./pages/HomePage";
 import LoginForm from "./components/auth/SignIn";
 import TransportPage from "./pages/transport/TransportPage";
-import AuthorizationDialog from "./components/auth/AuthorizationDialog";
 import {useSelector} from "react-redux";
-import authReducer from "./redux/modules/auth";
 
 const PrivateRoute = ({children, ...rest}) => {
     const isAuthenticated = useSelector(state => state.auth.authenticated);

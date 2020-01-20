@@ -9,6 +9,7 @@ export const VERIFY_TOKEN = 'gtk_verify_token';
 export const AUTHENTICATED = 'gtk_authenticated_user';
 export const UNAUTHENTICATED = 'gtk_unauthenticated_user';
 export const AUTHENTICATION_ERROR = 'gtk_authentication_error';
+export const AUTHENTICATION_ERROR_CLEAR = 'auth/AUTHENTICATION_ERROR_CLEAR';
 
 
 const initialState = {
@@ -29,6 +30,9 @@ export default function reducer(state = initialState, action) {
         }
         case UNAUTHENTICATED : {
             return {...state,authenticated: false,token: ''}
+        }
+        case AUTHENTICATION_ERROR_CLEAR : {
+            return  {...state,error: ''}
         }
         default : {
             return state
@@ -95,13 +99,11 @@ function* verifyToken(data) {
 function* authorizathion(user) {
     try {
         const userData = user.payload;
-
         let token = yield call(api.authentication, userData);
         console.log(" token ",token);
         yield put(successAuthorized(token.data));
         yield put(loadCurrentUser(token.data));
         localStorage.setItem('userToken', token.data);
-
     } catch (e) {
         console.log(e.message);
         yield put({
@@ -119,4 +121,8 @@ const successAuthorized = (data) => {
     }
 }
 
-
+export const clearingError = () => {
+    return {
+        type: AUTHENTICATION_ERROR_CLEAR
+    }
+}

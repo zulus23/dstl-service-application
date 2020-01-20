@@ -9,6 +9,7 @@ export const GTK_LOAD_CURRENT_USER_INFO = 'GTK_LOAD_CURRENT_USER_INFO';
 export const GTK_CHANGE_CURRENT_ENTERPRISE = 'GTK_CHANGE_CURRENT_ENTERPRISE';
 
 
+
 const initialState = {
     error: '',
     enterprises:null,
@@ -33,7 +34,6 @@ export default  function reducer(state = initialState, action) {
          case GTK_CLEAN_CURRENT_USER : {
              return {...state,enterprises: null, currentUser : null, selectedEnterprise:  null }
          }
-
 
 
 
