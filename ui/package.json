@@ -15,7 +15,7 @@
     "devextreme-intl": "^19.2.2-alpha-19228-2142",
     "devextreme-react": "19.2",
     "formik": "^2.0.8",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-draggable": "^4.2.0",
